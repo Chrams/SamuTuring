@@ -1146,12 +1146,17 @@ public:
         std::stringstream ss;
 
         ss << rules.size();
-
-        for ( auto& rule : rules ) {
+	
+	/*for ( auto& rule : rules ) {
             ss << ", " <<rule.first.first <<","  << rule.first.second << "(" << rule.second<< ") ";
-        }
+        }*/
 
-
+	std::map<ReinforcedAction,int>::iterator it;
+	for(it=rules.begin();it!=rules.end();++it)
+	{
+	  ss << ", " <<(*it).first.first <<","  << (*it).first.second << "(" << (*it).second<< ") ";
+	}
+	
         return ss.str();
 
     }
@@ -1160,12 +1165,20 @@ public:
 
         //std::vector<std::pair<std::pair<int, int>, int>> tmp;
         std::vector<std::tuple<int,int,int>> tmp;
+	
+	std::map<ReinforcedAction,int>::iterator it;
 
-        for ( auto& rule : rules ) {
+        /*for ( auto& rule : rules ) {
             //std::tuple<int,int,int> p {{rule.first.first, rule.first.second}, rule.second};
             auto p = std::make_tuple(rule.first.first, rule.first.second, rule.second);
             tmp.push_back ( p );
-        }
+        }*/
+        
+        for(it=rules.begin();it != rules.end(); ++it)
+	{
+	  auto p = std::make_tuple((*it).first.first, (*it).first.second, (*it).second);
+          tmp.push_back ( p );
+	}
 
         /*std::sort (
             std::begin ( tmp ), std::end ( tmp ),
