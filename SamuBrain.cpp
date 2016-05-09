@@ -860,16 +860,18 @@ void SamuBrain::learning ( int **reality, int * center_of_tape, int noc , int **
 void SamuBrain::init_MPUs ( bool ex )
 {
 
-  for ( auto& mpu : m_brain )
+  std::map<std::string, MORGAN>::iterator it;
+  for(it=m_brain.begin();it!=m_brain.end();++it)
+  //for ( auto& mpu : m_brain )
     {
 
-      MORGAN morgan = mpu.second;
+      MORGAN morgan = (*it).second;
 
 
 
       if ( ex )
         {
-          if ( mpu.second != m_morgan )
+          if ( (*it).second != m_morgan )
             {
               morgan->getHabituation().clear();
 	      
