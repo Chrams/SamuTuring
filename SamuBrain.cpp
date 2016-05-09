@@ -60,11 +60,13 @@ SamuBrain::SamuBrain ( int w, int h ) : m_w ( w ), m_h ( h )
 
 SamuBrain::~SamuBrain()
 {
-
-  for ( auto& mpu : m_brain )
+  std::map<std::string, MORGAN>::iterator it;
+  for(it=m_brain.begin();it!=m_brain.end();++it)
+    delete (*it).second;
+  /*for ( auto& mpu : m_brain )
     {
       delete mpu.second;
-    }
+    }*/
 
 }
 
@@ -670,11 +672,13 @@ void SamuBrain::learning ( int **reality, int * center_of_tape, int noc , int **
 
       int ell = 0	;
 
+      std::map<std::string, MORGAN>::iterator it;
+      for(it=m_brain.begin();it!=m_brain.end();++it)
+	{
+      //for ( auto& mpu : m_brain )
+        //{
 
-      for ( auto& mpu : m_brain )
-        {
-
-          MORGAN morgan = mpu.second;
+          MORGAN morgan = (*it).second;
 
           sum = pred ( morgan, reality, center_of_tape, noc, predictions, 4, vsum, sum2, vsum2 );
 
@@ -688,7 +692,7 @@ void SamuBrain::learning ( int **reality, int * center_of_tape, int noc , int **
 	    
 	      qDebug() << "   HABI2 MONITOR:"
                   << m_internal_clock
-                   << "[SEARCHING] MPU:" << mpu.first.c_str()
+                   << "[SEARCHING] MPU:" << (*it).first.c_str()
 		   << vsum2 << sum2 
                    << "bogocertainty of convergence:"
                    << mon2*100 << "%";
@@ -700,7 +704,7 @@ void SamuBrain::learning ( int **reality, int * center_of_tape, int noc , int **
 
           qDebug() << "   HABITUATION MONITOR:"
                    << m_internal_clock
-                   << "[SEARCHING] MPU:" << mpu.first.c_str()
+                   << "[SEARCHING] MPU:" << (*it).first.c_str()
                    << "bogocertainty of convergence:"
                    << mon*100 << "%";
 
@@ -711,14 +715,14 @@ void SamuBrain::learning ( int **reality, int * center_of_tape, int noc , int **
 
               qDebug() << "   KNOWLEDGE MONITOR:"
                        << m_internal_clock
-                       << "[DETECTED] MPU:" << mpu.first.c_str()
+                       << "[DETECTED] MPU:" << (*it).first.c_str()
                        << "ELL" << ell;
             }            
             
             
           if ( maxSamuQl == nullptr && (habi || mon >= 1.0) ) //.9 )
             {
-              maxSamuQl = mpu.second;
+              maxSamuQl = (*it).second;
               //break;
             }
             
